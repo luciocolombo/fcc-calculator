@@ -8,18 +8,40 @@ function App() {
    const handleNumber = (event) => {
       const number = event.target.textContent;
       if (display === "0") return setDisplay(number);
+      const displayArray = display.trim().split(" ");
+      const lastSymbol = displayArray.pop();
+      const isLastSymbolZero = lastSymbol === "0";
+      if (isLastSymbolZero) return setDisplay((prev) => prev.trim().slice(0, -1) + number);
       return setDisplay((prev) => prev + number);
    };
 
    const handleOperation = (event) => {
-      //handle dual operators
-      //handle - after * and /
+      // handle /- to '//' trick
       const operation = event.target.textContent;
+      const displayArray = display.trim().split(" ");
+      const lastSymbol = displayArray.pop();
+      const isLastSymbolOperator = operators.includes(lastSymbol);
+      if (operation === "-") {
+         if (lastSymbol === "-") return;
+         if (lastSymbol === "/" || lastSymbol === "*") return setDisplay((prev) => String(prev + " " + operation + " "));
+      }
+      if (isLastSymbolOperator) {
+         return setDisplay((prev) => prev.trim().slice(0, -1) + operation + " ");
+      }
       setDisplay((prev) => prev + " " + operation + " ");
    };
 
    const handleEquals = () => {
-      setDisplay(eval);
+      const displayArray = display.trim().split(" ");
+      const lastSymbol = displayArray.pop();
+      if (operators.includes(lastSymbol) || lastSymbol === ".") return;
+      setDisplay((prev) => {
+         const prevArray = prev
+            .split(" ")
+            .map((symbol) => parseFloat(symbol, 10) || symbol)
+            .join("");
+         return String(eval(prevArray));
+      });
    };
 
    const handleAC = () => {
@@ -27,26 +49,45 @@ function App() {
    };
 
    const handleDecimal = () => {
-      const lastSymbol = display.split(" ").pop();
-      if (lastSymbol.includes(".") || !operators.includes(lastSymbol)) return;
+      const lastSymbol = display.trim().split(" ").pop();
+      if (lastSymbol.includes(".") || operators.includes(lastSymbol)) return;
       setDisplay((prev) => prev + ".");
+   };
+
+   const toText = (num) => {
+      return {
+         0: "zero",
+         1: "one",
+         2: "two",
+         3: "three",
+         4: "four",
+         5: "five",
+         6: "six",
+         7: "seven",
+         8: "eight",
+         9: "nine",
+         "+": "add",
+         "-": "subtract",
+         "*": "multiply",
+         "/": "divide",
+      }[num];
    };
    return (
       <div className="App d-flex justify-content-center align-items-center ">
          <div className="mainDiv w-50 container bg-secondary">
-            <h1>{display}</h1>
+            <h1 id="display">{display}</h1>
             <div className="col-3">
                {numbers.map((num) => (
-                  <button className="col-4" id={num} key={num} onClick={handleNumber}>
+                  <button className="col-4" id={toText(num)} key={num} onClick={handleNumber}>
                      {num}
                   </button>
                ))}
                {operators.map((op) => (
-                  <button className="col-4" key={op} onClick={handleOperation}>
+                  <button className="col-4" id={toText(op)} key={op} onClick={handleOperation}>
                      {op}
                   </button>
                ))}
-               <button id="." className="col-4" onClick={handleDecimal}>
+               <button id="decimal" className="col-4" onClick={handleDecimal}>
                   .
                </button>
                <button className="col-4" id="equals" onClick={handleEquals}>
