@@ -2,5 +2,14 @@
   min-height: 600px;
 }
 .mainDiv{
+  margin-top: 10%;
   min-height: 300px;
+  max-width: 300px;
+  min-width: 200px;
+}
+
+h4{
+  min-height: 30px;
+  text-align: right;
+
 }

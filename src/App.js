@@ -80,26 +80,28 @@ function App() {
    };
    return (
       <div className="App d-flex justify-content-center align-items-center ">
-         <div className="mainDiv w-50 container bg-secondary">
-            <h1 id="display">{display}</h1>
-            <div className="col-3">
+         <div className="mainDiv w-50 container bg-light border">
+            <h4 id="display" className="border mt-3 mx-4">
+               {display}
+            </h4>
+            <div className="col-10 m-auto my-4">
                {numbers.map((num) => (
-                  <button className="col-4" id={toText(num)} key={num} onClick={handleNumber}>
+                  <button className="col-4 btn btn-secondary" id={toText(num)} key={num} onClick={handleNumber}>
                      {num}
                   </button>
                ))}
                {operators.map((op) => (
-                  <button className="col-4" id={toText(op)} key={op} onClick={handleOperation}>
+                  <button className="col-4 btn btn-secondary" id={toText(op)} key={op} onClick={handleOperation}>
                      {op}
                   </button>
                ))}
-               <button id="decimal" className="col-4" onClick={handleDecimal}>
+               <button id="decimal" className="col-4 btn btn-secondary" onClick={handleDecimal}>
                   .
                </button>
-               <button className="col-4" id="equals" onClick={handleEquals}>
+               <button className="col-8 btn btn-warning" id="equals" onClick={handleEquals}>
                   =
                </button>
-               <button className="col-8" id="clear" onClick={handleAC}>
+               <button className="col-4 btn btn-danger" id="clear" onClick={handleAC}>
                   AC
                </button>
             </div>
