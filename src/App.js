@@ -16,17 +16,23 @@ function App() {
    };
 
    const handleOperation = (event) => {
-      // handle /- to '//' trick
       const operation = event.target.textContent;
       const displayArray = display.trim().split(" ");
       const lastSymbol = displayArray.pop();
-      const isLastSymbolOperator = operators.includes(lastSymbol);
-      if (operation === "-") {
-         if (lastSymbol === "-") return;
-         if (lastSymbol === "/" || lastSymbol === "*") return setDisplay((prev) => String(prev + " " + operation + " "));
-      }
-      if (isLastSymbolOperator) {
-         return setDisplay((prev) => prev.trim().slice(0, -1) + operation + " ");
+      const isLastSymbolOperation = operators.includes(lastSymbol);
+      const secondLastSymbol = displayArray[displayArray.length - 2];
+      const isSecondLastSymbolOperation = operators.includes(secondLastSymbol);
+      if (isLastSymbolOperation) {
+         if (operation !== "-" && !isSecondLastSymbolOperation) {
+            return setDisplay((prev) => prev.trim().slice(0, -2) + " " + operation + " ");
+         }
+         if (lastSymbol === "-") {
+            if (operation === "-") return;
+            if (isSecondLastSymbolOperation) {
+               console.log({ secondLastSymbol, isSecondLastSymbolOperation });
+               return setDisplay((prev) => prev.trim().slice(0, -5) + " " + operation + " ");
+            }
+         }
       }
       setDisplay((prev) => prev + " " + operation + " ");
    };
